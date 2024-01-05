@@ -1,0 +1,11 @@
+# Ignore fablo-target folder
+fablo-target/
+
+# Ignore newDev/fablo-target folder
+newDev/fablo-target/
+
+# Ignore chaincode/chaincode-kv-node/node_modules/ folder and its contents
+chaincodes/chaincode-kv-node/node_modules
+
+# Ignore newDev/chaincode/chaincode-kv-node/node_modules/ folder and its contents
+newDev/chaincodes/chaincode-kv-node/node_modules
