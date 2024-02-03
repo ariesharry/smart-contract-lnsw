@@ -3,7 +3,7 @@
   "global": {
     "fabricVersion": "2.4.7",
     "tls": false,
-    "engine": "kubernetes",
+    "engine": "docker",
     "peerDevMode": false,
     "tools": {
       "explorer": true
@@ -13,7 +13,7 @@
     {
       "organization": {
         "name": "Orderer",
-        "domain": "orderer.example.com"
+        "domain": "orderer.lnsw.com"
       },
       "orderers": [
         {
@@ -28,8 +28,8 @@
     },
     {
       "organization": {
-        "name": "Org1",
-        "domain": "org1.example.com"
+        "name": "lnsw",
+        "domain": "org1.lnsw.com"
       },
       "peer": {
         "instances": 2,
@@ -42,10 +42,10 @@
   ],
   "channels": [
     {
-      "name": "my-channel1",
+      "name": "do-channel",
       "orgs": [
         {
-          "name": "Org1",
+          "name": "lnsw",
           "peers": [
             "peer0",
             "peer1"
@@ -59,7 +59,7 @@
       "name": "chaincode1",
       "version": "0.0.1",
       "lang": "node",
-      "channel": "my-channel1",
+      "channel": "do-channel",
       "directory": "./chaincodes/chaincode-kv-node"
     }
   ]
