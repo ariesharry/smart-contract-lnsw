@@ -32,7 +32,98 @@
         "domain": "org1.lnsw.com"
       },
       "peer": {
-        "instances": 2,
+        "instances": 1,
+        "db": "LevelDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "co",
+        "domain": "org2.co.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "LevelDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "sl",
+        "domain": "org3.co.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "LevelDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "to",
+        "domain": "org4.to.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "LevelDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "inaport",
+        "domain": "org5.inaport.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "LevelDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "ff",
+        "domain": "org6.ff.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "LevelDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "spsl",
+        "domain": "org7.spsl.com"
+      },
+      "peer": {
+        "instances": 1,
+        "db": "LevelDb"
+      },
+      "tools": {
+        "fabloRest": true
+      }
+    },
+    {
+      "organization": {
+        "name": "bank",
+        "domain": "org8.bank.com"
+      },
+      "peer": {
+        "instances": 1,
         "db": "LevelDb"
       },
       "tools": {
@@ -47,8 +138,49 @@
         {
           "name": "lnsw",
           "peers": [
-            "peer0",
-            "peer1"
+            "peer0"
+          ]
+        },
+        {
+          "name": "co",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "sl",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "to",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "inaport",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "ff",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "spsl",
+          "peers": [
+            "peer0"
+          ]
+        },
+        {
+          "name": "bank",
+          "peers": [
+            "peer0"
           ]
         }
       ]
