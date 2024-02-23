@@ -55,7 +55,7 @@
     {
       "organization": {
         "name": "sl",
-        "domain": "org3.co.com"
+        "domain": "org3.sl.com"
       },
       "peer": {
         "instances": 1,
