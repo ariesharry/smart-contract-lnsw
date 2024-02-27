@@ -12,7 +12,7 @@ class DOContract extends Contract {
 
   async request(ctx, deliveryOrderData) {
     const orderData = JSON.parse(deliveryOrderData);
-    orderData.status = "requested";
+    orderData.status = "Submitted";
     const orderId = crypto.createHash('sha256').update(deliveryOrderData).digest('hex');
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK", orderId };
@@ -22,7 +22,7 @@ class DOContract extends Contract {
     const buffer = await ctx.stub.getState(orderId);
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(buffer.toString());
-    orderData.status = "released";
+    orderData.status = "Released";
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK" };
   }
@@ -31,16 +31,16 @@ class DOContract extends Contract {
     const buffer = await ctx.stub.getState(orderId);
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(buffer.toString());
-    orderData.status = "rejected";
+    orderData.status = "Rejected";
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK" };
   }
 
-  async updateRequest(ctx, orderId, updatedDeliveryOrderData) {
+  async updateRequestSL(ctx, orderId, updatedDeliveryOrderData) {
     const buffer = await ctx.stub.getState(orderId);
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(updatedDeliveryOrderData);
-    orderData.status = "requested";
+    orderData.status = "Processed";
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK" };
   }
@@ -55,12 +55,38 @@ class DOContract extends Contract {
     const startKey = '';
     const endKey = '';
     const allResults = [];
-    for await (const {key, value} of ctx.stub.getStateByRange(startKey, endKey)) {
+    for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
       const strValue = Buffer.from(value).toString('utf8');
       let record = JSON.parse(strValue);
       allResults.push({ Key: key, Record: record });
     }
     return allResults;
+  }
+
+  async queryAllOrdersCO(ctx, coName) {
+    const startKey = '';
+    const endKey = '';
+    const allResults = [];
+    for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
+      const strValue = Buffer.from(value).toString('utf8');
+      let record = JSON.parse(strValue);
+      allResults.push({ Key: key, Record: record })
+      allResults.filter((data) => data.Record.requestorId === coName)
+    }
+    return allResults
+  }
+
+  async queryAllOrdersSL(ctx, slName) {
+    const startKey = '';
+    const endKey = '';
+    const allResults = [];
+    for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
+      const strValue = Buffer.from(value).toString('utf8');
+      let record = JSON.parse(strValue);
+      allResults.push({ Key: key, Record: record })
+      allResults.filter((data) => data.Record.shippingLine.shippingType.split("|")[0].trim() === slName)
+    }
+    return allResults
   }
 }
 
