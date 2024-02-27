@@ -12,8 +12,9 @@ class DOContract extends Contract {
 
   async request(ctx, deliveryOrderData) {
     const orderData = JSON.parse(deliveryOrderData);
-    orderData.status = "Submitted";
     const orderId = crypto.createHash('sha256').update(deliveryOrderData).digest('hex');
+    orderData.status = "Submitted";
+    orderData.orderId = orderId;
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK", orderId };
   }
