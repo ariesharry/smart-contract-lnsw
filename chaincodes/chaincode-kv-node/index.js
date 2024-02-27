@@ -68,7 +68,7 @@ class DOContract extends Contract {
     const startKey = '';
     const endKey = '';
     const allResults = [];
-    const filterResults = []
+    let filterResults = []
     for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
       const strValue = Buffer.from(value).toString('utf8');
       let record = JSON.parse(strValue);
@@ -82,7 +82,7 @@ class DOContract extends Contract {
     const startKey = '';
     const endKey = '';
     const allResults = [];
-    const filterResults = [];
+    let filterResults = [];
     for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
       const strValue = Buffer.from(value).toString('utf8');
       let record = JSON.parse(strValue);
