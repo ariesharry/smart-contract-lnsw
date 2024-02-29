@@ -78,16 +78,17 @@ class DOContract extends Contract {
     return filterResults
   }
 
-  async queryAllOrdersSL(ctx, slName) {
+  async queryAllOrdersSL(ctx, listKodeSL) {
     const startKey = '';
     const endKey = '';
     const allResults = [];
     let filterResults = [];
+    const listSLCode = JSON.parse(listKodeSL)
     for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
       const strValue = Buffer.from(value).toString('utf8');
       let record = JSON.parse(strValue);
       allResults.push({ Key: key, Record: record })
-      filterResults = allResults.filter((data) => data.Record.shippingLine.shippingType.split("|")[0].trim() === slName)
+      filterResults = allResults.filter((data) => listSLCode.includes(data.Record.requestDetail.shippingLine.shippingType.split("|")[0].trim()))
     }
     return filterResults
   }
