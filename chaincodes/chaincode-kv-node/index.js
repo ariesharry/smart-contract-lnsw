@@ -10,40 +10,63 @@ class DOContract extends Contract {
     // function that will be invoked on chaincode instantiation
   }
 
-  async request(ctx, deliveryOrderData) {
+  async requestDO(ctx, deliveryOrderData) {
     const orderData = JSON.parse(deliveryOrderData);
     const orderId = crypto.createHash('sha256').update(deliveryOrderData).digest('hex');
+    orderData.statusDate = new Date().toLocaleString();
     orderData.status = "Submitted";
     orderData.orderId = orderId;
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
-    return { success: "OK", orderId };
+    return { success: "OK", orderId: orderId, status: orderData.status, datetime: orderData.statusDate };
   }
 
-  async release(ctx, orderId) {
+  async getStatusDO(ctx, orderId) {
+    const buffer = await ctx.stub.getState(orderId);
+    if (!buffer || !buffer.length) {
+      return { error: "NOT_FOUND" }
+    }
+    const orderData = JSON.parse(buffer.toString())
+    return { success: "OK", status: orderData.status, datetime: orderData.statusDate }
+  }
+
+  async updateStatusDO(ctx, status, orderId) {
+    const buffer = await ctx.stub.getState(orderId);
+    if (!buffer || !buffer.length) {
+      return { error: "NOT_FOUND" }
+    }
+    const orderData = JSON.parse(buffer.toString())
+    orderData.status = status;
+    orderData.statusDate = new Date().toLocaleString();
+    await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
+    return { success: "OK", status: orderData.status, datetime: orderData.statusDate }
+  }
+
+  async releaseDO(ctx, orderId) {
     const buffer = await ctx.stub.getState(orderId);
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(buffer.toString());
     orderData.status = "Released";
+    orderData.statusDate = new Date().toLocaleString()
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
-    return { success: "OK" };
+    return { success: "OK", status: orderData.status, datetime: orderData.statusDate };
   }
 
-  async reject(ctx, orderId) {
+  async rejectDO(ctx, orderId) {
     const buffer = await ctx.stub.getState(orderId);
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(buffer.toString());
     orderData.status = "Rejected";
+    orderData.statusDate = new Date().toLocaleDateString();
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
-    return { success: "OK" };
+    return { success: "OK", status: orderData.status, datetime: orderData.statusDate };
   }
 
-  async updateRequestSL(ctx, orderId, updatedDeliveryOrderData) {
+  async updateDO(ctx, orderId, updatedDeliveryOrderData) {
     const buffer = await ctx.stub.getState(orderId);
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(updatedDeliveryOrderData);
-    orderData.status = "Processed";
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
-    return { success: "OK" };
+    return { success: "OK", status: orderData.status, datetime: orderData.statusDate };
   }
 
   async queryOrderById(ctx, orderId) {
