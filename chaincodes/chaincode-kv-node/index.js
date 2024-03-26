@@ -97,7 +97,7 @@ class DOContract extends Contract {
       const strValue = Buffer.from(value).toString('utf8');
       let record = JSON.parse(strValue);
       allResults.push({ Key: key, Record: record })
-      filterResults = allResults.filter((data) => data.Record.requestDetail.requestorId === coName)
+      filterResults = allResults.filter((data) => data.Record.requestDetail.requestor.requestorId === coName)
     }
     return filterResults
   }
