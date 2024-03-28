@@ -116,15 +116,6 @@ class DOContract extends Contract {
     }
     return filterResults
   }
-
-  async deleteDO(ctx, orderId) {
-    const buffer = await ctx.stub.getState(orderId);
-    if (!buffer || !buffer.length) {
-      return { error: "NOT FOUND" }
-    }
-    const deletedBuffer = await ctx.stub.deleteState(orderId);
-    return { success: "OK" }
-  }
 }
 
 exports.contracts = [DOContract];
