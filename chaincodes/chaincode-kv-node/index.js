@@ -91,13 +91,13 @@ class DOContract extends Contract {
   async queryAllOrdersCO(ctx, coName) {
     const startKey = '';
     const endKey = '';
-    const allResults = [];
     let filterResults = []
     for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
       const strValue = Buffer.from(value).toString('utf8');
       let record = JSON.parse(strValue);
-      allResults.push({ Key: key, Record: record })
-      filterResults = allResults.filter((data) => data.Record.requestDetail.requestor.requestorId === coName)
+      if (record.requestDetail.requestor.requestorId === coName) {
+        filterResults.push({ Key: key, Record: record })
+      }
     }
     return filterResults
   }
@@ -105,14 +105,29 @@ class DOContract extends Contract {
   async queryAllOrdersSL(ctx, listKodeSL) {
     const startKey = '';
     const endKey = '';
-    const allResults = [];
     let filterResults = [];
     const listSLCode = JSON.parse(listKodeSL)
     for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
       const strValue = Buffer.from(value).toString('utf8');
       let record = JSON.parse(strValue);
-      allResults.push({ Key: key, Record: record })
-      filterResults = allResults.filter((data) => listSLCode.includes(data.Record.requestDetail.shippingLine.shippingType.split("|")[0].trim()))
+      if (listSLCode.includes(record.requestDetail.shippingLine.shippingType.split("|")[0].trim())) {
+        filterResults.push({ Key: key, Record: record })
+      }
+    }
+    return filterResults
+  }
+
+  async queryAllOrdersRelease(ctx) {
+    const startKey = '';
+    const endKey = '';
+    let filterResults = [];
+    const listSLCode = JSON.parse(listKodeSL)
+    for await (const { key, value } of ctx.stub.getStateByRange(startKey, endKey)) {
+      const strValue = Buffer.from(value).toString('utf8');
+      let record = JSON.parse(strValue);
+      if (record.requestDetail.status === 'Released') {
+        filterResults.push({ Key: key, Record: record })
+      }
     }
     return filterResults
   }
