@@ -13,7 +13,7 @@ class DOContract extends Contract {
   async requestDO(ctx, deliveryOrderData) {
     const orderData = JSON.parse(deliveryOrderData);
     const orderId = crypto.createHash('sha256').update(deliveryOrderData).digest('hex');
-    orderData.statusDate = new Date().toLocaleString();
+    orderData.statusDate = String(new Date());
     orderData.status = "Submitted";
     orderData.orderId = orderId;
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
@@ -37,7 +37,7 @@ class DOContract extends Contract {
     const orderData = JSON.parse(buffer.toString())
     // console.log(orderData) // jadi format json
     orderData.status = status;
-    orderData.statusDate = new Date().toLocaleString();
+    orderData.statusDate = String(new Date());
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK", status: orderData.status, datetime: orderData.statusDate }
   }
@@ -55,7 +55,7 @@ class DOContract extends Contract {
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(buffer.toString());
     orderData.status = "Released";
-    orderData.statusDate = new Date().toLocaleString()
+    orderData.statusDate = String(new Date())
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK", status: orderData.status, datetime: orderData.statusDate };
   }
@@ -65,7 +65,7 @@ class DOContract extends Contract {
     if (!buffer || !buffer.length) return { error: "NOT_FOUND" };
     const orderData = JSON.parse(buffer.toString());
     orderData.status = "Rejected";
-    orderData.statusDate = new Date().toLocaleDateString();
+    orderData.statusDate = String(new Date());
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK", status: orderData.status, datetime: orderData.statusDate };
   }
@@ -130,6 +130,15 @@ class DOContract extends Contract {
       }
     }
     return filterResults
+  }
+
+  async deleteDO(ctx, orderId) {
+    const buffer = await ctx.stub.getState(orderId);
+    if (!buffer || !buffer.length) {
+      return { error: "NOT FOUND" }
+    }
+    const deletedBuffer = await ctx.stub.deleteState(orderId);
+    return { success: "OK" }
   }
 }
 
