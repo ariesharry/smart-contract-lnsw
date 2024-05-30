@@ -29,7 +29,7 @@ class DOContract extends Contract {
     return { success: "OK", status: orderData.status, datetime: orderData.statusDate }
   }
 
-  async updateStatusDO(ctx, orderId, status) {
+  async updateStatusDO(ctx, orderId, status, note) {
     const buffer = await ctx.stub.getState(orderId);
     if (!buffer || !buffer.length) {
       return { error: "NOT_FOUND" }
@@ -37,6 +37,7 @@ class DOContract extends Contract {
     const orderData = JSON.parse(buffer.toString())
     // console.log(orderData) // jadi format json
     orderData.status = status;
+    orderData.note = note;
     orderData.statusDate = String(new Date());
     await ctx.stub.putState(orderId, Buffer.from(JSON.stringify(orderData)));
     return { success: "OK", status: orderData.status, datetime: orderData.statusDate }
